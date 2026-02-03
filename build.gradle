@@ -17,6 +17,6 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'org.freedom.Main'
+        attributes 'Main-Class': 'sdm.freedom.Main'
     }
 }
