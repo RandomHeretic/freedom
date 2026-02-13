@@ -25,6 +25,7 @@ public class FreedomAgentTests {
 
     @Test
     public void verifyCorrectAgentTypeForExample(){
+        //tests for the cast not breaking
         HumanAgent agent = (HumanAgent) AgentFactory.create("Player");
     }
 

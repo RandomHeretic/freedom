@@ -20,7 +20,7 @@ public class HumanAgent extends AbstractAgent {
 
         Scanner s = new Scanner(System.in);
 
-        int idx = -1;
+        int idx;
         do{
             System.out.println("Select a move by inserting the index of one of the offered options...");
             idx = s.nextInt();
