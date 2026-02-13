@@ -12,8 +12,7 @@ public class AgentFactory {
     static {
         AGENT_REGISTRY.put("Player", HumanAgent::new);
         AGENT_REGISTRY.put("Random", RandomAgent::new);
-        //further agent concepts:
-        //AGENT_REGISTRY.put("AI", AIAgent::new);
+        AGENT_REGISTRY.put("AI", MinimaxAgent::new);
     }
 
     public static AbstractAgent create(String type, int playerNumber){

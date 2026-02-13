@@ -61,4 +61,17 @@ public class FreedomAgentTests {
         }
     }
 
+    @Test
+    public void verifyValidMoveFromAIAgent(){
+        AbstractAgent agent = AgentFactory.create("AI", 1);
+        Board board = new Board(3);
+        State state = new State(board);
+        state.applyMove(new Move(1, 1), 0);
+        List<Move> successors = Arrays.asList(state.getLegalSuccessors());
+
+        Move nextMove = agent.selectNextMove(state);
+        assert successors.contains(nextMove);
+
+    }
+
 }
