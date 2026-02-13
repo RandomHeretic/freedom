@@ -74,4 +74,8 @@ public class State {
 
         return successorList.toArray(new Move[0]);
     }
+    @Override
+    public State clone(){
+        return new State(CurrentBoard.clone(), LastMove);
+    }
 }

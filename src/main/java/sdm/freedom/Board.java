@@ -129,4 +129,10 @@ public class Board {
 
         return x<0 || y<0 || y>=board.length || x>=board.length;
     }
+    @Override
+    public Board clone(){
+        return new Board(Arrays.stream(board)
+                .map(int[]::clone)
+                .toArray(int[][]::new));
+    }
 }
