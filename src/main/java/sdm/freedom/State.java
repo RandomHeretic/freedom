@@ -1,5 +1,7 @@
 package sdm.freedom;
 
+import java.util.ArrayList;
+
 public class State {
     private final Board CurrentBoard;
     private Move LastMove;
@@ -38,5 +40,9 @@ public class State {
             LastMove.printAsLastMove();
         }
         CurrentBoard.printBoard();
+    }
+
+    public Move[] getLegalSuccessors(){
+        throw new UnsupportedOperationException("Not implemented yet.");
     }
 }

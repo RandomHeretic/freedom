@@ -1,6 +1,11 @@
 import sdm.freedom.*;
 
 import org.junit.Test;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import static org.junit.Assert.assertEquals;
 
 public class FreedomBasicTests {
 
@@ -97,5 +102,69 @@ public class FreedomBasicTests {
         assert b.getBoardSize() == TEST_SIZE;
     }
 
+    @Test
+    public void verifySuccessorsForEmpty(){
+        Board board = new Board(3);
+        State state = new State(board);
+        List<Move> successors = Arrays.asList(state.getLegalSuccessors());
+
+        Set<Move> expected = Set.of(
+                new Move(0, 0),
+                new Move(0, 1),
+                new Move(0, 2),
+                new Move(1, 0),
+                new Move(1, 1),
+                new Move(1, 2),
+                new Move(2, 0),
+                new Move(2, 1),
+                new Move(2, 2)
+        );
+
+        assertEquals(expected, new HashSet<>(successors));
+    }
+
+    @Test
+    public void verifySuccessorsForAdjacent(){
+        Board board = new Board(3);
+        State state = new State(board);
+        state.applyMove(new Move(1,1),1);
+        List<Move> successors = Arrays.asList(state.getLegalSuccessors());
+
+        Set<Move> expected = Set.of(
+                new Move(0, 0),
+                new Move(0, 1),
+                new Move(0, 2),
+                new Move(1, 0),
+                //removed (1, 1)
+                new Move(1, 2),
+                new Move(2, 0),
+                new Move(2, 1),
+                new Move(2, 2)
+        );
+
+        assertEquals(expected, new HashSet<>(successors));
+    }
+
+    @Test
+    public void verifySuccessorsForBlocked(){
+        Board board = new Board(3);
+        State state = new State(board);
+
+        state.applyMove(new Move(0,1),1);
+        state.applyMove(new Move(1,0),1);
+        state.applyMove(new Move(1,1),1);
+
+        state.applyMove(new Move(0,0),1);
+        List<Move> successors = Arrays.asList(state.getLegalSuccessors());
+
+        Set<Move> expected = Set.of(
+                new Move(0, 2),
+                new Move(1, 2),
+                new Move(2, 1),
+                new Move(2, 2)
+        );
+
+        assertEquals(expected, new HashSet<>(successors));
+    }
 
 }
