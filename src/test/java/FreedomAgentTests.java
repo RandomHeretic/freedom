@@ -74,4 +74,35 @@ public class FreedomAgentTests {
 
     }
 
+    @Test
+    public void verifiyAITakesWinningMove() {
+        AbstractAgent agent = AgentFactory.create("AI", 1);
+        Board board = new Board(new int[][] {
+                new int[] {1, 1, 1, 2},
+                new int[] {1, 2, 1, 2},
+                new int[] {1, 2, 2, 2},
+                new int[] {0, 0, 0, 1}
+        });
+        State state = new State(board);
+        state.applyMove(new Move(3, 1), 2);
+        Move nextMove = agent.selectNextMove(state);
+
+        assert new Move(3, 0).equals(nextMove);
+    }
+
+    @Test
+    public void verifiyAIAvoidsLoosingMove() {
+        AbstractAgent agent = AgentFactory.create("AI", 2);
+        Board board = new Board(new int[][] {
+                new int[] {1, 1, 1, 2},
+                new int[] {1, 2, 1, 2},
+                new int[] {1, 2, 2, 2},
+                new int[] {0, 0, 0, 1}
+        });
+        State state = new State(board);
+        state.applyMove(new Move(3, 1), 1);
+        Move nextMove = agent.selectNextMove(state);
+
+        assert new Move(3, 0).equals(nextMove);
+    }
 }
