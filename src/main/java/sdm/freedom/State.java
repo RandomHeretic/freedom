@@ -43,6 +43,35 @@ public class State {
     }
 
     public Move[] getLegalSuccessors(){
-        throw new UnsupportedOperationException("Not implemented yet.");
+        int boardSize = CurrentBoard.getBoardSize();
+
+        ArrayList<Move> successorList = new ArrayList<>();
+
+        //first turn case
+        if(LastMove == null){
+            for (int x = 0; x < boardSize; x++)
+                for (int y = 0; y < boardSize; y++)
+                    successorList.add(new Move(x, y));
+            return successorList.toArray(new Move[0]);
+        }
+
+        int lastX = LastMove.x();
+        int lastY = LastMove.y();
+
+        //check adjacent spaces
+        for(int x = Math.max(0, lastX-1); x <= Math.min(boardSize-1, lastX+1); x++){
+            for(int y = Math.max(0, lastY-1); y <= Math.min(boardSize-1, lastY+1); y++){
+                if(CurrentBoard.givePosition(x, y) == 0)
+                    successorList.add(new Move(x, y));
+            }
+        }
+
+        //if no adjacent moves are valid, all others are
+        if(successorList.isEmpty()) for (int x = 0; x < boardSize; x++)
+            for (int y = 0; y < boardSize; y++)
+                if (CurrentBoard.givePosition(x, y) == 0)
+                    successorList.add(new Move(x, y));
+
+        return successorList.toArray(new Move[0]);
     }
 }

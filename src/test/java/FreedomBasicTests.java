@@ -160,6 +160,7 @@ public class FreedomBasicTests {
         Set<Move> expected = Set.of(
                 new Move(0, 2),
                 new Move(1, 2),
+                new Move(2, 0),
                 new Move(2, 1),
                 new Move(2, 2)
         );
