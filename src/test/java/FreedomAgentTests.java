@@ -14,24 +14,24 @@ public class FreedomAgentTests {
     @Test
     public void verifyAllAgentsExist(){
         for(String agentName : AgentFactory.availableAgents()){
-            assert AgentFactory.create(agentName) != null;
+            assert AgentFactory.create(agentName, 1) != null;
         }
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void throwsExceptionForUnknownAgentType() {
-        AgentFactory.create("unknownAgentThatDoesNotExist");
+        AgentFactory.create("unknownAgentThatDoesNotExist", -1);
     }
 
     @Test
     public void verifyCorrectAgentTypeForExample(){
         //tests for the cast not breaking
-        HumanAgent agent = (HumanAgent) AgentFactory.create("Player");
+        HumanAgent agent = (HumanAgent) AgentFactory.create("Player", 1);
     }
 
     @Test
     public void verifyValidMoveFromPlayerAgent(){
-        AbstractAgent agent = AgentFactory.create("Player");
+        AbstractAgent agent = AgentFactory.create("Player", 1);
         Board board = new Board(3);
         State state = new State(board);
         state.applyMove(new Move(1, 1), 0);
@@ -39,7 +39,7 @@ public class FreedomAgentTests {
 
         for(int i = 0; i < successors.size(); i++){
             System.setIn(new ByteArrayInputStream(String.valueOf(i).getBytes()));
-            Move nextMove = agent.selectNextMove(state.giveBoard(), successors.toArray(new Move[0]));
+            Move nextMove = agent.selectNextMove(state);
 
             assert successors.contains(nextMove);
         }
@@ -49,14 +49,14 @@ public class FreedomAgentTests {
 
     @Test
     public void verifyValidMoveFromRandomAgent(){
-        AbstractAgent agent = AgentFactory.create("Random");
+        AbstractAgent agent = AgentFactory.create("Random", 1);
         Board board = new Board(3);
         State state = new State(board);
         state.applyMove(new Move(1, 1), 0);
         List<Move> successors = Arrays.asList(state.getLegalSuccessors());
 
         for(int attempt = 0; attempt < 10; attempt++){
-            Move nextMove = agent.selectNextMove(state.giveBoard(), successors.toArray(new Move[0]));
+            Move nextMove = agent.selectNextMove(state);
             assert successors.contains(nextMove);
         }
     }

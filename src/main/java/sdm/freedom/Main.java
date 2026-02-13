@@ -25,8 +25,7 @@ public class Main {
             CurrentMatch.printBoardState();
 
             CurrentMatch.applyAMove(agents[CurrentMatch.getCurrentPlayerIdx()].selectNextMove(
-                    CurrentMatch.giveCurrentState().giveBoard(),
-                    CurrentMatch.giveCurrentState().getLegalSuccessors()
+                    CurrentMatch.giveCurrentState()
             ));
         }
         System.out.println("The game ended with the following scores");
@@ -40,9 +39,9 @@ public class Main {
         AbstractAgent agent = null;
         while (agent == null) {
             System.out.print("Enter type for Agent "+playerNumber+": ");
-            String type2 = s.nextLine().trim();
+            String type = s.nextLine().trim();
             try {
-                agent = AgentFactory.create(type2);
+                agent = AgentFactory.create(type, playerNumber);
             } catch (IllegalArgumentException e) {
                 System.out.println("Invalid agent type. Please choose from: " + AgentFactory.availableAgents());
             }
