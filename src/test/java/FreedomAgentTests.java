@@ -31,10 +31,10 @@ public class FreedomAgentTests {
 
     @Test
     public void verifyValidMoveFromPlayerAgent(){
-        AbstractAgent agent = AgentFactory.create("Player", 1);
+        AbstractAgent agent = AgentFactory.create("Player", 2);
         Board board = new Board(3);
         State state = new State(board);
-        state.applyMove(new Move(1, 1), 0);
+        state.applyMove(new Move(1, 1), 1);
         List<Move> successors = Arrays.asList(state.getLegalSuccessors());
 
         for(int i = 0; i < successors.size(); i++){
@@ -49,10 +49,10 @@ public class FreedomAgentTests {
 
     @Test
     public void verifyValidMoveFromRandomAgent(){
-        AbstractAgent agent = AgentFactory.create("Random", 1);
+        AbstractAgent agent = AgentFactory.create("Random", 2);
         Board board = new Board(3);
         State state = new State(board);
-        state.applyMove(new Move(1, 1), 0);
+        state.applyMove(new Move(1, 1), 1);
         List<Move> successors = Arrays.asList(state.getLegalSuccessors());
 
         for(int attempt = 0; attempt < 10; attempt++){
@@ -63,10 +63,10 @@ public class FreedomAgentTests {
 
     @Test
     public void verifyValidMoveFromAIAgent(){
-        AbstractAgent agent = AgentFactory.create("AI", 1);
+        AbstractAgent agent = AgentFactory.create("AI", 2);
         Board board = new Board(3);
         State state = new State(board);
-        state.applyMove(new Move(1, 1), 0);
+        state.applyMove(new Move(1, 1), 1);
         List<Move> successors = Arrays.asList(state.getLegalSuccessors());
 
         Move nextMove = agent.selectNextMove(state);
