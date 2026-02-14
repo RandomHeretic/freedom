@@ -76,10 +76,11 @@ public class State {
 
         //if it's the last move and placing would lower points allows not making the move
         if(CurrentBoard.isLastMove()){
-            int score = CurrentBoard.evaluateBoard()[1];
+            int player =(CurrentBoard.getBoardSize()+1)%2; //player intended as index for score
+            int score = CurrentBoard.evaluateBoard()[player];
             Board testBoard = CurrentBoard.clone();
-            testBoard.applyMove(successorList.toArray(new Move[0])[0],2);
-            if (score>testBoard.evaluateBoard()[1]){
+            testBoard.applyMove(successorList.toArray(new Move[0])[0],player+1);
+            if (score>testBoard.evaluateBoard()[player]){
                 successorList.add(new Move(-1,-1));
             }
         }

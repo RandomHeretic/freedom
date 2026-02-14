@@ -204,15 +204,31 @@ public class FreedomBasicTests {
 
 
     @Test
-    public void verifyLastMoveFreeIfLowersValue(){
+    public void verifyLastMoveFreeIfLowersValueOddBoard(){
         Board board = new Board(new int[][] {
                 {1,2,1,2,2},
-                {1,1,2,1,2},
+                {1,1,2,2,1},
                 {2,2,2,1,2},
-                {1,1,1,2,2},
-                {2,1,2,1,0}
+                {2,1,2,2,2},
+                {1,1,1,1,0}
         });
         State state = new State(board,new Move(2,2));
+        Move[] moves = state.getLegalSuccessors();
+
+        assert moves[1].equals(new Move(-1,-1));
+    }
+
+    @Test
+    public void verifyLastMoveFreeIfLowersValueEvenBoard(){
+        Board board = new Board(new int[][] {
+                {1,2,1,2,2,2},
+                {1,1,1,2,1,2},
+                {2,2,2,1,2,2},
+                {2,1,2,2,1,2},
+                {1,1,1,1,1,0},
+                {2,1,2,1,2,1}
+        });
+        State state = new State(board,new Move(0,2));
         Move[] moves = state.getLegalSuccessors();
 
         assert moves[1].equals(new Move(-1,-1));
