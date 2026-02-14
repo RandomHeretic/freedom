@@ -15,8 +15,10 @@ public class State {
     }
 
     public void applyMove(Move NewMove,int player){
-        CurrentBoard.applyMove(NewMove,player);
-        LastMove=NewMove;
+        if(!(NewMove.equals(new Move(-1,-1)))){
+            CurrentBoard.applyMove(NewMove,player);
+            LastMove=NewMove;
+        }
     }
 
 
@@ -72,6 +74,15 @@ public class State {
                 if (CurrentBoard.givePosition(x, y) == 0)
                     successorList.add(new Move(x, y));
 
+        //if it's the last move and placing would lower points allows not making the move
+        if(CurrentBoard.isLastMove()){
+            int score = CurrentBoard.evaluateBoard()[1];
+            Board testBoard = CurrentBoard.clone();
+            testBoard.applyMove(successorList.toArray(new Move[0])[0],2);
+            if (score>testBoard.evaluateBoard()[1]){
+                successorList.add(new Move(-1,-1));
+            }
+        }
         return successorList.toArray(new Move[0]);
     }
 

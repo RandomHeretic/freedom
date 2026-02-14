@@ -66,7 +66,7 @@ public class Board {
         return new int[] {white,black};
     }
 
-    public boolean checkLivePosition(int x,int y){
+    private boolean checkLivePosition(int x,int y){
 
         int[][][] directions = {
                 {
@@ -90,7 +90,7 @@ public class Board {
         boolean flagLive = false;
         for(int[][] dir : directions){
             int counterDead = 0;
-            int conterLive = 0;
+            int counterLive = 0;
             for(int[] coordinates : dir){
                 int newx = x + coordinates[0];
                 int newy = y + coordinates[1];
@@ -103,11 +103,11 @@ public class Board {
                     counterDead = 0;
                 }
                 if(board[newx][newy]==player && Math.abs(coordinates[0])<4 && Math.abs(coordinates[1])<4){
-                    conterLive +=1;
+                    counterLive +=1;
                 }else{
-                    conterLive =0;
+                    counterLive =0;
                 }
-                if(conterLive==3){
+                if(counterLive ==3){
                     flagLive = true;
                 }
 
@@ -134,6 +134,10 @@ public class Board {
         return Arrays.stream(board)
                 .flatMapToInt(Arrays::stream)
                 .allMatch(x -> x != 0);
+    }
+
+    public boolean isLastMove(){
+        return Arrays.stream(board).flatMapToInt(Arrays::stream).filter(n -> n == 0).count() == 1;
     }
 
     @Override

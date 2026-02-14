@@ -26,7 +26,7 @@ public class Match {
         if(checkValidMove(NewMove)) {
             CurrentState.applyMove(NewMove, CurrentPlayer);
             CurrentPlayer = 3-CurrentPlayer; //swap between 1 and 2
-        }
+        }//else if (CurrentState.isLastMove() && NewMove.equals(new Move(-1,-1){}
     }
 
     public boolean checkValidMove(Move NewMove){
