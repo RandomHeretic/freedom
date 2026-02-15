@@ -168,4 +168,69 @@ public class FreedomBasicTests {
         assertEquals(expected, new HashSet<>(successors));
     }
 
+    @Test
+    public void verifyBoardClone(){
+        Board board1 = new Board(1);
+        Board board2 = board1.clone();
+        assert board1 != board2;
+        assert board1.givePosition(0, 0) == board2.givePosition(0, 0);
+    }
+
+    @Test
+    public void verifyStateClone(){
+        Board board1 = new Board(1);
+        State  state1 = new State(board1);
+        State state2 = state1.clone();
+        assert state1 != state2;
+        assert state1.giveBoardPosition(0, 0) == state2.giveBoardPosition(0, 0);
+    }
+
+    @Test
+    public void verifyBoardTermination(){
+        Board board = new Board(1);
+        assert !board.isFull();
+        board.applyMove(new Move(0,0),1);
+        assert board.isFull();
+    }
+
+    @Test
+    public void verifyStateTermination(){
+        Board board = new Board(1);
+        State state = new State(board);
+        assert !state.isTerminal();
+        state.applyMove(new Move(0,0),1);
+        assert state.isTerminal();
+    }
+
+
+    @Test
+    public void verifyLastMoveFreeIfLowersValueOddBoard(){
+        Board board = new Board(new int[][] {
+                {1,2,1,2,2},
+                {1,1,2,2,1},
+                {2,2,2,1,2},
+                {2,1,2,2,2},
+                {1,1,1,1,0}
+        });
+        State state = new State(board,new Move(2,2));
+        Move[] moves = state.getLegalSuccessors();
+
+        assert moves[1].skipMove();
+    }
+
+    @Test
+    public void verifyLastMoveFreeIfLowersValueEvenBoard(){
+        Board board = new Board(new int[][] {
+                {1,2,1,2,2,2},
+                {1,1,1,2,1,2},
+                {2,2,2,1,2,2},
+                {2,1,2,2,1,2},
+                {1,1,1,1,1,0},
+                {2,1,2,1,2,1}
+        });
+        State state = new State(board,new Move(0,2));
+        Move[] moves = state.getLegalSuccessors();
+
+        assert moves[1].skipMove();
+    }
 }

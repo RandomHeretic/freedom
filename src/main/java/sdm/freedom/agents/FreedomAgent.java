@@ -1,10 +1,10 @@
 package sdm.freedom.agents;
 
-import sdm.freedom.Board;
 import sdm.freedom.Move;
+import sdm.freedom.State;
 
 public interface FreedomAgent {
     String getAgentName();
 
-    Move selectNextMove(Board b, Move[] successorMoves);
+    Move selectNextMove(State s);
 }
