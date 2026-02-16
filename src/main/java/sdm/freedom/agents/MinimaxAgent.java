@@ -25,7 +25,7 @@ public class MinimaxAgent extends AbstractAgent {
                             newState.applyMove(m, super.PLAYER_NUMBER);
                             return alphaBetaMinimaxStep(newState, MAX_DEPTH_PLIES, Integer.MIN_VALUE, Integer.MAX_VALUE, super.PLAYER_NUMBER);
                         }
-                )).orElseThrow();;
+                )).orElseThrow();
         return CompletableFuture.completedFuture(selectedMove);
 
     }

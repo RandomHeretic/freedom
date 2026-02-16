@@ -37,13 +37,6 @@ public class State {
         return LastMove;
     }
 
-    public void printState(){
-        if(LastMove!=null) {
-            LastMove.printAsLastMove();
-        }
-        CurrentBoard.printBoard();
-    }
-
     public Move[] getLegalSuccessors(){
         int boardSize = CurrentBoard.getBoardSize();
 

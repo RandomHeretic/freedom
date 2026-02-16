@@ -5,7 +5,6 @@ import sdm.freedom.State;
 import sdm.freedom.agents.AbstractAgent;
 import sdm.freedom.agents.AgentFactory;
 import sdm.freedom.agents.HumanAgent;
-import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
