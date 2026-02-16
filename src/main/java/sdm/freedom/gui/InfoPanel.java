@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -38,7 +39,7 @@ public class InfoPanel extends JPanel {
 
         turnLabel = new JLabel("Turno: BIANCO");
         turnLabel.setFont(fontTitolo);
-        turnLabel.setForeground(Color.BLUE); 
+        turnLabel.setForeground(Color.BLUE);
 
         whiteScoreLabel = new JLabel("Bianchi: 0");
         whiteScoreLabel.setFont(fontTesto);
@@ -53,13 +54,33 @@ public class InfoPanel extends JPanel {
         resultLabel.setVisible(false);
 
         // bottone Skip -> appare solo quando è l'ultima cella
-        skipButton = new JButton("Skip Move");
+        // fix bottone Mac-> creo bottone custom che si dipinge da solo per evitare il look nativo bianco del Mac
+        skipButton = new JButton("Skip Move") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                // Se premuto, scuriamo leggermente il colore
+                if (getModel().isPressed()) {
+                    g.setColor(getBackground().darker());
+                } else {
+                    g.setColor(getBackground());
+                }
+
+                g.fillRect(0, 0, getWidth(), getHeight());
+
+                super.paintComponent(g);
+            }
+        };
+
+        // estetica bottone
         skipButton.setFont(new Font("Arial", Font.BOLD, 16));
-        skipButton.setBackground(new Color(200, 80, 80));
-        skipButton.setForeground(Color.WHITE);
-        skipButton.setOpaque(true);   // forza il rendering del colore di sfondo
-        skipButton.setBorderPainted(false); // rimuove il bordo nativo (macOS lo ignora altrimenti) CONTINUA A DARE PROBLEMI SU MAC :( 
+        skipButton.setBackground(new Color(200, 80, 80)); // Rosso
+        skipButton.setForeground(Color.WHITE);  // testo Bianco
+        
+        // disattiva stile nativo Mac
+        skipButton.setContentAreaFilled(false); 
         skipButton.setFocusPainted(false);
+        skipButton.setBorderPainted(false);
+        
         skipButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         skipButton.setPreferredSize(new Dimension(160, 45));  // dimensione fissa
         skipButton.setMaximumSize(new Dimension(160, 45));
@@ -73,9 +94,9 @@ public class InfoPanel extends JPanel {
         // layout
         add(turnLabel);
         add(new JLabel(" "));
-        add(new JLabel(" ")); 
+        add(new JLabel(" "));
         add(whiteScoreLabel);
-        add(new JLabel(" ")); 
+        add(new JLabel(" "));
         add(blackScoreLabel);
         add(new JLabel(" "));
         add(resultLabel);
