@@ -22,7 +22,6 @@ public class UI {
         return instance;
     }
 
-    // quanto grande disegnare la griglia
     public void startGUI(int n) {
         // inizializza la partita
         currentMatch = new Match(n);
@@ -62,7 +61,28 @@ public class UI {
         return gameOver;
     }
 
-    // quando l'utente clicca
+    // ultima mossa fatta
+    public Move getLastMove() {
+        if (currentMatch == null) {
+            return null;
+        }
+        return currentMatch.giveCurrentState().giveLastMove();
+    }
+
+    // controlla se tra le mosse legali c'è una skip move
+    public boolean canSkip() {
+        if (currentMatch == null || gameOver) {
+            return false;
+        }
+        for (Move m : getLegalMoves()) {
+            if (m.skipMove()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // quando l'utente clicca una cella
     public void tryMove(int row, int col) {
         if (currentMatch == null || gameOver) {
             return;
@@ -71,36 +91,58 @@ public class UI {
         Move move = new Move(row, col);
 
         if (currentMatch.checkValidMove(move)) {
-
             currentMatch.applyAMove(move);
-
-            // calcola i punteggi -> metodo Board.java
-            int[] scores = currentMatch.evaluateBoard();
-            int whiteScore = scores[0];
-            int blackScore = scores[1];
-
-            // di chi è il turno ora
-            int currentPlayer = currentMatch.getCurrentPlayer();
-
-            // aggiorna la GUI
-            gameWindow.refresh(currentPlayer, whiteScore, blackScore);
-
-            // controlla se la partita è finita
-            if (currentMatch.giveCurrentState().isTerminal()) {
-                gameOver = true;
-                String risultato;
-                if (whiteScore > blackScore) {
-                    risultato = "Vince il BIANCO!";
-                } else if (blackScore > whiteScore) {
-                    risultato = "Vince il NERO!";
-                } else {
-                    risultato = "PAREGGIO!";
-                }
-                gameWindow.showGameOver(risultato, whiteScore, blackScore);
-            }
-
+            refreshAndCheckEnd();
         } else {
             System.out.println("Mossa non valida!");
+        }
+    }
+
+    // quando l'utente preme salta mossa
+    public void skipMove() {
+        if (!canSkip()) {
+            return;
+        }
+
+        // applica la skip -> Match cambia solo il turno
+        currentMatch.applyAMove(new Move(true));
+
+        // dopo skip -> partita finisce
+        gameOver = true;
+        int[] scores = currentMatch.evaluateBoard();
+        gameWindow.refresh(currentMatch.getCurrentPlayer(), scores[0], scores[1]);
+
+        String risultato;
+        if (scores[0] > scores[1]) {
+            risultato = "Vince il BIANCO!";
+        } else if (scores[1] > scores[0]) {
+            risultato = "Vince il NERO!";
+        } else {
+            risultato = "PAREGGIO!";
+        }
+        gameWindow.showGameOver(risultato, scores[0], scores[1]);
+    }
+
+    // aggiorna la GUI e controlla fine partita
+    private void refreshAndCheckEnd() {
+        int[] scores = currentMatch.evaluateBoard();
+        int whiteScore = scores[0];
+        int blackScore = scores[1];
+        int currentPlayer = currentMatch.getCurrentPlayer();
+
+        gameWindow.refresh(currentPlayer, whiteScore, blackScore);
+
+        if (currentMatch.giveCurrentState().isTerminal()) {
+            gameOver = true;
+            String risultato;
+            if (whiteScore > blackScore) {
+                risultato = "Vince il BIANCO!";
+            } else if (blackScore > whiteScore) {
+                risultato = "Vince il NERO!";
+            } else {
+                risultato = "PAREGGIO!";
+            }
+            gameWindow.showGameOver(risultato, whiteScore, blackScore);
         }
     }
 }

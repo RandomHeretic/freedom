@@ -9,8 +9,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.swing.JPanel;
 
@@ -28,14 +26,14 @@ public class BoardPanel extends JPanel {
     private static final Color CELL_LIGHT = new Color(240, 217, 181);  // beige chiaro
     private static final Color CELL_DARK = new Color(181, 136, 99);   // marrone
 
+    // colore ultima mossa
+    private static final Color LAST_MOVE_COLOR = new Color(255, 235, 59);
+
     // colore sfondo esterno 
     private static final Color BG_COLOR = new Color(49, 46, 43);       // grigio scuro
 
     // colore etichette
     private static final Color LABEL_COLOR = new Color(200, 200, 200); // grigio chiaro
-
-    // colore mosse legali
-    private static final Color LEGAL_MOVE_COLOR = new Color(100, 200, 100, 110); // verde trasparente
 
     // colore bordo griglia
     private static final Color GRID_BORDER_COLOR = new Color(30, 30, 30);
@@ -109,26 +107,46 @@ public class BoardPanel extends JPanel {
             }
         }
 
+        // ultima mossa
+        Move lastMove = UI.getInstance().getLastMove();
+        if (lastMove != null && !lastMove.skipMove()) {
+            // controlliamo coordinate valide
+            if (lastMove.x() >= 0 && lastMove.y() >= 0) {
+                g2.setColor(LAST_MOVE_COLOR);
+                g2.fillRect(
+                        MARGIN + (lastMove.y() * CELL_SIZE),
+                        MARGIN + (lastMove.x() * CELL_SIZE),
+                        CELL_SIZE, CELL_SIZE
+                );
+            }
+        }
+
         // mosse legali
         if (!UI.getInstance().isGameOver()) {
             Move[] legalMoves = UI.getInstance().getLegalMoves();
-            Set<String> legalSet = new HashSet<>();
-            for (Move m : legalMoves) {
-                if (m.x() >= 0 && m.y() >= 0) {
-                    legalSet.add(m.x() + "," + m.y());
-                }
+
+            // dimensione pallino 
+            int hintDiameter = CELL_SIZE / 4;
+            // l'offset x centrarlo
+            int offset = (CELL_SIZE - hintDiameter) / 2;
+
+            int currentPlayer = UI.getInstance().getCurrentPlayer();
+
+            if (currentPlayer == 1) {
+                // pallino BIANCO 
+                g2.setColor(Color.LIGHT_GRAY);
+            } else {
+                // pallino NERO
+                g2.setColor(Color.BLACK);
             }
 
-            g2.setColor(LEGAL_MOVE_COLOR);
-            for (int r = 0; r < boardSize; r++) {
-                for (int c = 0; c < boardSize; c++) {
-                    if (legalSet.contains(r + "," + c)) {
-                        g2.fillRect(
-                                MARGIN + (c * CELL_SIZE),
-                                MARGIN + (r * CELL_SIZE),
-                                CELL_SIZE, CELL_SIZE
-                        );
-                    }
+            for (Move m : legalMoves) {
+                if (m.x() >= 0 && m.y() >= 0) {
+                    int drawX = MARGIN + (m.y() * CELL_SIZE) + offset;
+                    int drawY = MARGIN + (m.x() * CELL_SIZE) + offset;
+
+                    // pallino
+                    g2.fillOval(drawX, drawY, hintDiameter, hintDiameter);
                 }
             }
         }
@@ -156,11 +174,6 @@ public class BoardPanel extends JPanel {
             int colYTop = MARGIN - 12;
             g2.drawString(colLabel, colX, colYTop);
 
-            /*
-            // sotto
-            int colYBottom = MARGIN + (boardSize * CELL_SIZE) + fm.getAscent() + 8;
-            g2.drawString(colLabel, colX, colYBottom);
-             */
             // numeri righe
             String rowLabel = String.valueOf(i + 1);
             int rowLabelW = fm.stringWidth(rowLabel);
@@ -169,12 +182,6 @@ public class BoardPanel extends JPanel {
             // sinistra
             int rowXLeft = MARGIN - rowLabelW - 12;
             g2.drawString(rowLabel, rowXLeft, rowY);
-
-            /* 
-            // destra
-            int rowXRight = MARGIN + (boardSize * CELL_SIZE) + 12;
-            g2.drawString(rowLabel, rowXRight, rowY);
-             */
         }
 
         // pedine

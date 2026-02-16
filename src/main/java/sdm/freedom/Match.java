@@ -23,10 +23,15 @@ public class Match {
     }
 
     public void applyAMove(Move NewMove){
+        // gestione skip move -> se il giocatore sceglie di saltare l'ultima mossa, cambia solo il turno
+        if (NewMove.skipMove()) {
+            CurrentPlayer = 3 - CurrentPlayer;
+            return;
+        }
         if(checkValidMove(NewMove)) {
             CurrentState.applyMove(NewMove, CurrentPlayer);
-            CurrentPlayer = 3-CurrentPlayer; //swap between 1 and 2
-        }//else if (CurrentState.isLastMove() && NewMove.equals(new Move(-1,-1){}
+            CurrentPlayer = 3-CurrentPlayer;
+        }
     }
 
     public boolean checkValidMove(Move NewMove){
@@ -37,7 +42,7 @@ public class Match {
             return true;
         }
         int[][] neighbours = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};
-        boolean flagFreedom=false; //checks for empty spaces next to the last move
+        boolean flagFreedom=false;
         boolean flagNext=false;
 
         for(int[] nei: neighbours){
