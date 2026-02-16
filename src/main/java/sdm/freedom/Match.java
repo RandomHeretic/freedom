@@ -58,10 +58,6 @@ public class Match {
         return !flagFreedom || flagNext;
     }
 
-    public void printBoardState(){
-        CurrentState.printState();
-    }
-
     public int givePosition(Move m){
         return CurrentState.giveBoardPosition(m);
     }
