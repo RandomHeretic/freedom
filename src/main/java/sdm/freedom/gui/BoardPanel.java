@@ -14,8 +14,9 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
+import sdm.freedom.GameController;
 import sdm.freedom.Move;
-import sdm.freedom.UI;
+import sdm.freedom.UIController;
 
 public class BoardPanel extends JPanel {
 
@@ -75,11 +76,11 @@ public class BoardPanel extends JPanel {
                     return;
                 }
 
-                // AZIIONE
-                System.out.println("Hai cliccato la cella: Riga " + (row + 1) + ", Colonna " + (col + 1));
+                // AZIONE
+                // System.out.println("Hai cliccato la cella: Riga " + (row + 1) + ", Colonna " + (col + 1));
 
-                // proviamo a muovere
-                UI.getInstance().tryMove(row, col);
+                Move inputMove = new Move(col, row);
+                UIController.getInstance().userClickedForMove(inputMove);
             }
         });
     }
@@ -110,8 +111,8 @@ public class BoardPanel extends JPanel {
         }
 
         // mosse legali
-        if (!UI.getInstance().isGameOver()) {
-            Move[] legalMoves = UI.getInstance().getLegalMoves();
+        if (!GameController.getInstance().isGameOver()) {
+            Move[] legalMoves = GameController.getInstance().getLegalMoves();
             Set<String> legalSet = new HashSet<>();
             for (Move m : legalMoves) {
                 if (m.x() >= 0 && m.y() >= 0) {
@@ -177,11 +178,13 @@ public class BoardPanel extends JPanel {
              */
         }
 
-        // pedine
+
+        int[][] board = GameController.getInstance().getBoard();
+
         for (int r = 0; r < boardSize; r++) {
             for (int c = 0; c < boardSize; c++) {
 
-                int value = UI.getInstance().getPieceAt(r, c);
+                int value = board[r][c];
 
                 if (value != 0) {
                     // calcoliamo dove disegnare il cerchio in pixel
