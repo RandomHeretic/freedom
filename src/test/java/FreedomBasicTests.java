@@ -33,7 +33,7 @@ public class FreedomBasicTests {
     public void verifyBoardHasASquareMatrix(){
         int n=9;
         Board b = new Board(n);
-        int[][] rows = b.giveBoard();
+        int[][] rows = b.getBoardMatrix();
         int c=rows.length,d=rows[0].length;
         assert c==d;
         assert c==n;
@@ -74,7 +74,7 @@ public class FreedomBasicTests {
         Board b = new Board(8);
         Move m = new Move(1,3);
         State s = new State(b,m);
-        assert b == s.giveBoard();
+        assert b == s.getBoard();
         assert m == s.giveLastMove();
     }
 
