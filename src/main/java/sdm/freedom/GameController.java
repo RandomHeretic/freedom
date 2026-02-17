@@ -44,7 +44,6 @@ public class GameController implements MoveInputListener {
     }
 
     public Move[] getLegalMoves() {
-
         return match.getCurrentState().getLegalSuccessors();
     }
 

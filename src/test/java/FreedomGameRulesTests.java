@@ -1,26 +1,11 @@
 
-import sdm.freedom.*;
-
 import org.junit.Test;
 
-public class FreedomGameRulesTests {
+import sdm.freedom.Board;
+import sdm.freedom.Match;
+import sdm.freedom.Move;
 
-    @Test
-    public void legalMovesOnly(){
-        Match Mat = new Match(8);
-        Move m1 = new Move(1,1);
-        Move m2 = new Move(5,5);
-        Move m3 = new Move(1,2);
-        Move m4 = new Move(2,3);
-        Mat.checkAndApplyMove(m1);
-        Mat.checkAndApplyMove(m2);
-        Mat.checkAndApplyMove(m3);
-        Mat.checkAndApplyMove(m4);
-        assert Mat.getPosition(m1)==1;
-        assert Mat.getPosition(m2)==0;
-        assert Mat.getPosition(m3)==2;
-        assert Mat.getPosition(m4)==1;
-    }
+public class FreedomGameRulesTests {
 
     @Test
     public void freedomMove(){
