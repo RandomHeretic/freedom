@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JPanel;
 
 import sdm.freedom.GameController;
@@ -74,7 +75,6 @@ public class BoardPanel extends JPanel {
 
                 // AZIONE
                 // System.out.println("Hai cliccato la cella: Riga " + (row + 1) + ", Colonna " + (col + 1));
-
                 Move inputMove = new Move(row, col);
                 UIController.getInstance().userClickedForMove(inputMove);
             }
@@ -145,7 +145,6 @@ public class BoardPanel extends JPanel {
             }
         }
 
-
         // bordo griglia
         g2.setColor(GRID_BORDER_COLOR);
         g2.drawRect(
@@ -178,7 +177,6 @@ public class BoardPanel extends JPanel {
             int rowXLeft = MARGIN - rowLabelW - 12;
             g2.drawString(rowLabel, rowXLeft, rowY);
         }
-
 
         int[][] board = GameController.getInstance().getBoard();
 
