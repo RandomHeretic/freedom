@@ -1,11 +1,11 @@
 package sdm.freedom;
 
-import java.util.concurrent.CompletableFuture;
-
-import javax.swing.SwingUtilities;
-
 import sdm.freedom.agents.AbstractAgent;
 import sdm.freedom.agents.InputListenerAgent;
+
+import javax.swing.*;
+import java.util.concurrent.CompletableFuture;
+
 
 public class GameController implements MoveInputListener {
 
@@ -30,12 +30,9 @@ public class GameController implements MoveInputListener {
         this.uiController = uiController;
         this.agents = agents;
         this.match = new Match(boardSize);
-        this.gameOver = false;
 
         uiController.setMoveInputListener(this);
-
-        refreshUI();
-        CompletableFuture.runAsync(this::startTurn);
+        startTurn();
     }
 
     public Move[] getLegalMoves() {
@@ -48,14 +45,10 @@ public class GameController implements MoveInputListener {
     }
 
     private void startTurn() {
-        if (gameOver) {
-            return;
-        }
-
         AbstractAgent agent = agents[match.getCurrentPlayerIdx()];
 
-        CompletableFuture<Move> future
-                = agent.selectNextMove(match.getCurrentState());
+        CompletableFuture<Move> future =
+                agent.selectNextMove(match.getCurrentState());
 
         future.thenAccept(this::applyMove);
     }
@@ -65,13 +58,18 @@ public class GameController implements MoveInputListener {
 
         match.applyMove(move);
 
+        int[] scores = match.evaluateBoard();
         boolean terminal = match.getCurrentState().isTerminal();
 
-        refreshUI();
+        // Run UI update separately, as to not break game logic by having it wait for unrelated code
+        SwingUtilities.invokeLater(() -> {
+            uiController.refresh(getPlayerTurn(), scores[0], scores[1]);
+            uiController.repaintBoard();
 
-        if (terminal) {
-            SwingUtilities.invokeLater(this::endGame);
-        }
+            if (terminal) {
+                endGame(scores);
+            }
+        });
 
         // Run next turn by itself as soon as possible. It should avoid async issues with other features (UI)
         if (!terminal) {
@@ -79,20 +77,11 @@ public class GameController implements MoveInputListener {
         }
     }
 
-    private void refreshUI() {
-        int[] scores = match.evaluateBoard();
-        SwingUtilities.invokeLater(() -> {
-            uiController.refresh(getPlayerTurn(), scores[0], scores[1]);
-            uiController.repaintBoard();
-        });
-    }
-
-    private void endGame() {
-        int[] scores = match.evaluateBoard();
-        String result
-                = scores[0] > scores[1] ? "Vince il BIANCO!"
-                        : scores[1] > scores[0] ? "Vince il NERO!"
-                                : "PAREGGIO!";
+    private void endGame(int[] scores) {
+        String result =
+                scores[0] > scores[1] ? "Vince il BIANCO!" :
+                        scores[1] > scores[0] ? "Vince il NERO!" :
+                                "PAREGGIO!";
 
         uiController.showGameOver(result, scores[0], scores[1]);
     }
@@ -110,13 +99,6 @@ public class GameController implements MoveInputListener {
     }
 
 
-
-    public void reset() {
-        gameOver = true;
-        match = null;
-        agents = null;
-        uiController = null;
-    }
 
     public int[][] getBoard() {
         return match.getCurrentState().getBoard().getBoardMatrix();

@@ -1,11 +1,11 @@
 package sdm.freedom.gui;
 
+import sdm.freedom.GameController;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
-
-import sdm.freedom.GameController;
 
 public class GameGUI extends JFrame {
 
