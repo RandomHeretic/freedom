@@ -5,9 +5,9 @@ import sdm.freedom.State;
 import sdm.freedom.agents.AbstractAgent;
 import sdm.freedom.agents.AgentFactory;
 import sdm.freedom.agents.HumanAgent;
-import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class FreedomAgentTests {
 
@@ -30,24 +30,6 @@ public class FreedomAgentTests {
     }
 
     @Test
-    public void verifyValidMoveFromPlayerAgent(){
-        AbstractAgent agent = AgentFactory.create("Player", 2);
-        Board board = new Board(3);
-        State state = new State(board);
-        state.applyMove(new Move(1, 1), 1);
-        List<Move> successors = Arrays.asList(state.getLegalSuccessors());
-
-        for(int i = 0; i < successors.size(); i++){
-            System.setIn(new ByteArrayInputStream(String.valueOf(i).getBytes()));
-            Move nextMove = agent.selectNextMove(state);
-
-            assert successors.contains(nextMove);
-        }
-        //reset
-        System.setIn(System.in);
-    }
-
-    @Test
     public void verifyValidMoveFromRandomAgent(){
         AbstractAgent agent = AgentFactory.create("Random", 2);
         Board board = new Board(3);
@@ -56,8 +38,10 @@ public class FreedomAgentTests {
         List<Move> successors = Arrays.asList(state.getLegalSuccessors());
 
         for(int attempt = 0; attempt < 10; attempt++){
-            Move nextMove = agent.selectNextMove(state);
-            assert successors.contains(nextMove);
+            CompletableFuture<Move> nextMove = agent.selectNextMove(state);
+
+            Move move = nextMove.join(); //wait
+            assert successors.contains(move);
         }
     }
 
@@ -69,8 +53,10 @@ public class FreedomAgentTests {
         state.applyMove(new Move(1, 1), 1);
         List<Move> successors = Arrays.asList(state.getLegalSuccessors());
 
-        Move nextMove = agent.selectNextMove(state);
-        assert successors.contains(nextMove);
+        CompletableFuture<Move> nextMove = agent.selectNextMove(state);
+
+        Move move = nextMove.join(); //wait
+        assert successors.contains(move);
 
     }
 
@@ -85,9 +71,10 @@ public class FreedomAgentTests {
         });
         State state = new State(board);
         state.applyMove(new Move(3, 1), 2);
-        Move nextMove = agent.selectNextMove(state);
+        CompletableFuture<Move> nextMove = agent.selectNextMove(state);
 
-        assert new Move(3, 0).equals(nextMove);
+        Move move = nextMove.join(); //wait
+        assert new Move(3, 0).equals(move);
     }
 
     @Test
@@ -101,8 +88,9 @@ public class FreedomAgentTests {
         });
         State state = new State(board);
         state.applyMove(new Move(3, 1), 1);
-        Move nextMove = agent.selectNextMove(state);
+        CompletableFuture<Move> nextMove = agent.selectNextMove(state);
 
-        assert new Move(3, 0).equals(nextMove);
+        Move move = nextMove.join(); //wait
+        assert new Move(3, 0).equals(move);
     }
 }

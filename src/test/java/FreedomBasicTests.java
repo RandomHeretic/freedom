@@ -33,7 +33,7 @@ public class FreedomBasicTests {
     public void verifyBoardHasASquareMatrix(){
         int n=9;
         Board b = new Board(n);
-        int[][] rows = b.giveBoard();
+        int[][] rows = b.getBoardMatrix();
         int c=rows.length,d=rows[0].length;
         assert c==d;
         assert c==n;
@@ -74,14 +74,14 @@ public class FreedomBasicTests {
         Board b = new Board(8);
         Move m = new Move(1,3);
         State s = new State(b,m);
-        assert b == s.giveBoard();
-        assert m == s.giveLastMove();
+        assert b == s.getBoard();
+        assert m == s.getLastMove();
     }
 
     @Test
     public void verifyMatchHasState(){
         Match M = new Match(8);
-        assert M.giveCurrentState().getClass()== State.class;
+        assert M.getCurrentState().getClass()== State.class;
     }
 
     @Test
@@ -89,10 +89,10 @@ public class FreedomBasicTests {
         Move m1 = new Move(1,2);
         Move m2 = new Move(1,3);
         Match Mat = new Match(5);
-        Mat.applyAMove(m1);
-        Mat.applyAMove(m2);
-        assert Mat.giveCurrentState().giveBoardPosition(m1)==1;
-        assert Mat.giveCurrentState().giveBoardPosition(m2)==2;
+        Mat.applyMove(m1);
+        Mat.applyMove(m2);
+        assert Mat.getCurrentState().giveBoardPosition(m1)==1;
+        assert Mat.getCurrentState().giveBoardPosition(m2)==2;
     }
 
     @Test

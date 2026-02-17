@@ -3,8 +3,10 @@ package sdm.freedom.agents;
 import sdm.freedom.Move;
 import sdm.freedom.State;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface FreedomAgent {
     String getAgentName();
 
-    Move selectNextMove(State s);
+    CompletableFuture<Move> selectNextMove(State s);
 }

@@ -1,16 +1,17 @@
 package sdm.freedom.gui;
 
+import sdm.freedom.GameController;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-import sdm.freedom.UI;
-
 public class GameGUI extends JFrame {
-    
+
+    // riferimenti ai due pannelli
     private final BoardPanel boardPanel;
-    private final InfoPanel infoPanel; 
+    private final InfoPanel infoPanel;
 
     public GameGUI(int n) {
         super("Freedom Game");
@@ -21,12 +22,12 @@ public class GameGUI extends JFrame {
 
         // creo due pannelli
         boardPanel = new BoardPanel(n);
-        infoPanel = new InfoPanel(); 
+        infoPanel = new InfoPanel();
 
         add(boardPanel, BorderLayout.CENTER);
         add(infoPanel, BorderLayout.EAST);
 
-        pack(); 
+        pack();
         setLocationRelativeTo(null);
     }
 
@@ -36,7 +37,7 @@ public class GameGUI extends JFrame {
         // aggiorna i testi laterali
         infoPanel.updateInfo(currentPlayer, whiteScore, blackScore);
         // mostra/nascondi il bottone skip in base alla logica
-        infoPanel.setSkipVisible(UI.getInstance().canSkip());
+        infoPanel.setSkipVisible(GameController.getInstance().canSkip());
     }
 
     public void showGameOver(String risultato, int whiteScore, int blackScore) {

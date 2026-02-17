@@ -15,14 +15,14 @@ public class State {
     }
 
     public void applyMove(Move NewMove,int player){
+        LastMove=NewMove;
         if(!(NewMove.skipMove())){
             CurrentBoard.applyMove(NewMove,player);
-            LastMove=NewMove;
         }
     }
 
 
-    public Board giveBoard(){
+    public Board getBoard(){
         return CurrentBoard;
     }
 
@@ -33,15 +33,8 @@ public class State {
         return CurrentBoard.givePosition(new Move(x,y));
     }
 
-    public Move giveLastMove(){
+    public Move getLastMove(){
         return LastMove;
-    }
-
-    public void printState(){
-        if(LastMove!=null) {
-            LastMove.printAsLastMove();
-        }
-        CurrentBoard.printBoard();
     }
 
     public Move[] getLegalSuccessors(){
@@ -88,7 +81,7 @@ public class State {
     }
 
     public boolean isTerminal(){
-        return CurrentBoard.isFull();
+        return CurrentBoard.isFull() || ( LastMove!=null && LastMove.skipMove());
     }
 
     @Override

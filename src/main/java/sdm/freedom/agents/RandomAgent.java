@@ -4,6 +4,7 @@ import sdm.freedom.Move;
 import sdm.freedom.State;
 
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 public class RandomAgent extends AbstractAgent {
 
@@ -12,10 +13,11 @@ public class RandomAgent extends AbstractAgent {
     }
 
     @Override
-    public Move selectNextMove(State s) {
+    public CompletableFuture<Move> selectNextMove(State s) {
 
         Move[] successors =s.getLegalSuccessors();
-        return successors[new Random().nextInt(successors.length)];
+        Move selectedMove = successors[new Random().nextInt(successors.length)];
+        return CompletableFuture.completedFuture(selectedMove);
 
     }
 }

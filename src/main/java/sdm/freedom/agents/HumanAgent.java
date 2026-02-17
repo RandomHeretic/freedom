@@ -3,34 +3,25 @@ package sdm.freedom.agents;
 import sdm.freedom.Move;
 import sdm.freedom.State;
 
-import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 
-public class HumanAgent extends AbstractAgent {
+public class HumanAgent extends AbstractAgent implements InputListenerAgent {
 
     protected HumanAgent(int playerNumber) {
         super("Human Player", playerNumber);
     }
 
+    private CompletableFuture<Move> selectedMove;
+
+
     @Override
-    public Move selectNextMove(State s) {
+    public CompletableFuture<Move> selectNextMove(State state) {
+        selectedMove = new CompletableFuture<>();
+        return selectedMove;
+    }
 
-        Move[] successors = s.getLegalSuccessors();
-        for(int i = 0; i < successors.length; i++){
-            if(successors[i].skipMove()){
-                System.out.println("Option " + i + ": Skip");
-            }else {
-                System.out.println("Option " + i + ": " + successors[i].toString());
-            }
-        }
-
-        Scanner scanner = new Scanner(System.in);
-
-        int idx;
-        do{
-            System.out.println("Select a move by inserting the index of one of the offered options...");
-            idx = scanner.nextInt();
-        }while (idx < 0 || idx >= successors.length);
-
-        return  successors[idx];
+    public void onUserMove(Move move) {
+        if (selectedMove != null && !selectedMove.isDone())
+            selectedMove.complete(move);
     }
 }

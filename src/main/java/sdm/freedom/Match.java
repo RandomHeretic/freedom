@@ -10,7 +10,7 @@ public class Match {
         CurrentPlayer = 1;
     }
 
-    public State giveCurrentState(){
+    public State getCurrentState(){
         return CurrentState;
     }
 
@@ -22,35 +22,37 @@ public class Match {
         return getCurrentPlayer()-1;
     }
 
-    public void applyAMove(Move NewMove){
-        // gestione skip move -> se il giocatore sceglie di saltare l'ultima mossa, cambia solo il turno
-        if (NewMove.skipMove()) {
-            CurrentPlayer = 3 - CurrentPlayer;
-            return;
-        }
-        if(checkValidMove(NewMove)) {
-            CurrentState.applyMove(NewMove, CurrentPlayer);
-            CurrentPlayer = 3-CurrentPlayer;
-        }
+    public void checkAndApplyMove(Move NewMove){
+        if(!checkValidMove(NewMove)) return;
+        CurrentState.applyMove(NewMove, CurrentPlayer);
+        CurrentPlayer = 3-CurrentPlayer; //swap between 1 and 2
+    }
+
+    public void applyMove(Move NewMove){
+        CurrentState.applyMove(NewMove, CurrentPlayer);
+        CurrentPlayer = 3-CurrentPlayer; //swap between 1 and 2
     }
 
     public boolean checkValidMove(Move NewMove){
-        if (CurrentState.giveBoard().isOutOfBounds(NewMove) || CurrentState.giveBoardPosition(NewMove) !=0){
+        if (NewMove.skipMove()) {
+            return true;
+        }
+        if (CurrentState.getBoard().isOutOfBounds(NewMove) || CurrentState.giveBoardPosition(NewMove) !=0){
             return false;
         }
-        if (CurrentState.giveLastMove() == null){
+        if (CurrentState.getLastMove() == null){
             return true;
         }
         int[][] neighbours = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};
-        boolean flagFreedom=false;
+        boolean flagFreedom=false; //checks for empty spaces next to the last move
         boolean flagNext=false;
 
         for(int[] nei: neighbours){
 
-            int newx = CurrentState.giveLastMove().returnMove()[0]+nei[0];
-            int newy = CurrentState.giveLastMove().returnMove()[1]+nei[1];
+            int newx = CurrentState.getLastMove().returnMove()[0]+nei[0];
+            int newy = CurrentState.getLastMove().returnMove()[1]+nei[1];
             Move LastMoveNeighbour = new Move(newx,newy);
-            if(CurrentState.giveBoard().isOutOfBounds(new Move(newx,newy))){
+            if(CurrentState.getBoard().isOutOfBounds(new Move(newx,newy))){
                 continue;
             }
             if(CurrentState.giveBoardPosition(LastMoveNeighbour)==0) {
@@ -63,15 +65,11 @@ public class Match {
         return !flagFreedom || flagNext;
     }
 
-    public void printBoardState(){
-        CurrentState.printState();
-    }
-
     public int givePosition(Move m){
         return CurrentState.giveBoardPosition(m);
     }
 
     public int[] evaluateBoard(){
-        return CurrentState.giveBoard().evaluateBoard();
+        return CurrentState.getBoard().evaluateBoard();
     }
 }

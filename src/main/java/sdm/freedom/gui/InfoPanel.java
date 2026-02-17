@@ -1,10 +1,9 @@
 package sdm.freedom.gui;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
+import sdm.freedom.Move;
+import sdm.freedom.UIController;
+
+import java.awt.*;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -12,8 +11,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import sdm.freedom.UI;
 
 public class InfoPanel extends JPanel {
 
@@ -71,33 +68,30 @@ public class InfoPanel extends JPanel {
             }
         };
 
-        // estetica bottone
+
         skipButton.setFont(new Font("Arial", Font.BOLD, 16));
         skipButton.setBackground(new Color(200, 80, 80)); // Rosso
         skipButton.setForeground(Color.WHITE);  // testo Bianco
-        
+
         // disattiva stile nativo Mac
-        skipButton.setContentAreaFilled(false); 
+        skipButton.setContentAreaFilled(false);
         skipButton.setFocusPainted(false);
         skipButton.setBorderPainted(false);
-        
         skipButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         skipButton.setPreferredSize(new Dimension(160, 45));  // dimensione fissa
         skipButton.setMaximumSize(new Dimension(160, 45));
         skipButton.setVisible(false); // nascosto finché non serve
 
         // quando premuto, dice al Singleton di eseguire lo skip
-        skipButton.addActionListener(e -> {
-            UI.getInstance().skipMove();
-        });
+        skipButton.addActionListener(e -> UIController.getInstance().userClickedForMove(new Move(true)));
 
-        // layout
         add(turnLabel);
         add(new JLabel(" "));
         add(new JLabel(" "));
         add(whiteScoreLabel);
         add(new JLabel(" "));
         add(blackScoreLabel);
+        add(new JLabel(" "));
         add(new JLabel(" "));
         add(resultLabel);
         add(Box.createVerticalGlue()); // spinge il bottone in fondo al pannello

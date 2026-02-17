@@ -9,11 +9,11 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JPanel;
 
+import sdm.freedom.GameController;
 import sdm.freedom.Move;
-import sdm.freedom.UI;
+import sdm.freedom.UIController;
 
 public class BoardPanel extends JPanel {
 
@@ -22,12 +22,11 @@ public class BoardPanel extends JPanel {
     private final int MARGIN = 60;
     private final int PIECE_PADDING = 6;
 
+    private static final Color LAST_MOVE_COLOR = new Color(255, 235, 59);
+
     // colori cella alternati (scacchiera)
     private static final Color CELL_LIGHT = new Color(240, 217, 181);  // beige chiaro
     private static final Color CELL_DARK = new Color(181, 136, 99);   // marrone
-
-    // colore ultima mossa
-    private static final Color LAST_MOVE_COLOR = new Color(255, 235, 59);
 
     // colore sfondo esterno 
     private static final Color BG_COLOR = new Color(49, 46, 43);       // grigio scuro
@@ -73,11 +72,11 @@ public class BoardPanel extends JPanel {
                     return;
                 }
 
-                // AZIIONE
-                System.out.println("Hai cliccato la cella: Riga " + (row + 1) + ", Colonna " + (col + 1));
+                // AZIONE
+                // System.out.println("Hai cliccato la cella: Riga " + (row + 1) + ", Colonna " + (col + 1));
 
-                // proviamo a muovere
-                UI.getInstance().tryMove(row, col);
+                Move inputMove = new Move(row, col);
+                UIController.getInstance().userClickedForMove(inputMove);
             }
         });
     }
@@ -108,7 +107,7 @@ public class BoardPanel extends JPanel {
         }
 
         // ultima mossa
-        Move lastMove = UI.getInstance().getLastMove();
+        Move lastMove = GameController.getInstance().getLastMove();
         if (lastMove != null && !lastMove.skipMove()) {
             // controlliamo coordinate valide
             if (lastMove.x() >= 0 && lastMove.y() >= 0) {
@@ -122,18 +121,18 @@ public class BoardPanel extends JPanel {
         }
 
         // mosse legali
-        if (!UI.getInstance().isGameOver()) {
-            Move[] legalMoves = UI.getInstance().getLegalMoves();
+        if (!GameController.getInstance().isGameOver()) {
+            Move[] legalMoves = GameController.getInstance().getLegalMoves();
 
-            // dimensione pallino 
+            // dimensione pallino
             int hintDiameter = CELL_SIZE / 4;
             // l'offset x centrarlo
             int offset = (CELL_SIZE - hintDiameter) / 2;
 
-            int currentPlayer = UI.getInstance().getCurrentPlayer();
+            int currentPlayer = GameController.getInstance().getPlayerTurn();
 
             if (currentPlayer == 1) {
-                // pallino BIANCO 
+                // pallino BIANCO
                 g2.setColor(Color.LIGHT_GRAY);
             } else {
                 // pallino NERO
@@ -144,8 +143,6 @@ public class BoardPanel extends JPanel {
                 if (m.x() >= 0 && m.y() >= 0) {
                     int drawX = MARGIN + (m.y() * CELL_SIZE) + offset;
                     int drawY = MARGIN + (m.x() * CELL_SIZE) + offset;
-
-                    // pallino
                     g2.fillOval(drawX, drawY, hintDiameter, hintDiameter);
                 }
             }
@@ -184,11 +181,13 @@ public class BoardPanel extends JPanel {
             g2.drawString(rowLabel, rowXLeft, rowY);
         }
 
-        // pedine
+
+        int[][] board = GameController.getInstance().getBoard();
+
         for (int r = 0; r < boardSize; r++) {
             for (int c = 0; c < boardSize; c++) {
 
-                int value = UI.getInstance().getPieceAt(r, c);
+                int value = board[r][c];
 
                 if (value != 0) {
                     // calcoliamo dove disegnare il cerchio in pixel
