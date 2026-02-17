@@ -3,9 +3,9 @@ name: CI GitHubActions
 # When to trigger the workflow: on push or pull request to the main branch
 on:
   push:
-    branches: ["main"]
+    branches: ["**"]
   pull_request:
-    branches: ["main"]
+    branches: ["**"]
 
 jobs:
   build:
