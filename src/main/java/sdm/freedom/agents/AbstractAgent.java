@@ -3,6 +3,8 @@ package sdm.freedom.agents;
 import sdm.freedom.Move;
 import sdm.freedom.State;
 
+import java.util.concurrent.CompletableFuture;
+
 public abstract class AbstractAgent implements FreedomAgent{
     protected final  String AGENT_NAME;
     protected final int PLAYER_NUMBER;
@@ -16,5 +18,5 @@ public abstract class AbstractAgent implements FreedomAgent{
         return AGENT_NAME;
     }
 
-    public abstract Move selectNextMove(State s);
+    public abstract CompletableFuture<Move> selectNextMove(State state);
 }

@@ -6,46 +6,35 @@ import sdm.freedom.agents.AgentFactory;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
 
-        System.out.println("Welcome to Freedom, state the size of the board please");
-
+        System.out.println("Board size:");
         int n = s.nextInt();
-        s.nextLine(); //flush after nextInt
-
-        Match CurrentMatch = new Match(n);
+        s.nextLine();
 
         System.out.println("Available agents: " + AgentFactory.availableAgents());
 
-        AbstractAgent[] agents = new AbstractAgent[] {askUserForAgentCreation(1, s), askUserForAgentCreation(2, s)};
+        AbstractAgent[] agents = {
+                askUserForAgentCreation(1, s),
+                askUserForAgentCreation(2, s)
+        };
 
-        for(int i=0;i<n*n;i++){
-            System.out.println("Current Board State:");
-            CurrentMatch.printBoardState();
+        UIController uiController = UIController.getInstance();
+        uiController.start(n);
 
-            CurrentMatch.applyAMove(agents[CurrentMatch.getCurrentPlayerIdx()].selectNextMove(
-                    CurrentMatch.giveCurrentState()
-            ));
-        }
-        System.out.println("The game ended with the following scores");
-        int[] scores = CurrentMatch.evaluateBoard();
-        System.out.println("White: " + scores[0]);
-        System.out.println("Black: " + scores[1]);
-
+        GameController.getInstance().initialize(n, uiController, agents);
     }
 
-    private static AbstractAgent askUserForAgentCreation(int playerNumber, Scanner s){
-        AbstractAgent agent = null;
-        while (agent == null) {
-            System.out.print("Enter type for Agent "+playerNumber+": ");
-            String type = s.nextLine().trim();
+    private static AbstractAgent askUserForAgentCreation(int player, Scanner s) {
+        while (true) {
+            System.out.print("Enter agent type for player " + player + ": ");
             try {
-                agent = AgentFactory.create(type, playerNumber);
+                return AgentFactory.create(s.nextLine().trim(), player);
             } catch (IllegalArgumentException e) {
-                System.out.println("Invalid agent type. Please choose from: " + AgentFactory.availableAgents());
+                System.out.println("Invalid agent.");
             }
         }
-        return agent;
     }
 }

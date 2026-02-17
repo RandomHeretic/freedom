@@ -12,10 +12,10 @@ public class FreedomGameRulesTests {
         Move m2 = new Move(5,5);
         Move m3 = new Move(1,2);
         Move m4 = new Move(2,3);
-        Mat.applyAMove(m1);
-        Mat.applyAMove(m2);
-        Mat.applyAMove(m3);
-        Mat.applyAMove(m4);
+        Mat.checkAndApplyMove(m1);
+        Mat.checkAndApplyMove(m2);
+        Mat.checkAndApplyMove(m3);
+        Mat.checkAndApplyMove(m4);
         assert Mat.givePosition(m1)==1;
         assert Mat.givePosition(m2)==0;
         assert Mat.givePosition(m3)==2;
@@ -30,11 +30,11 @@ public class FreedomGameRulesTests {
         Move m3 = new Move(0,1);
         Move m4 = new Move(0,0);
         Move m5 = new Move(3,3);
-        Mat.applyAMove(m1);
-        Mat.applyAMove(m2);
-        Mat.applyAMove(m3);
-        Mat.applyAMove(m4);
-        Mat.applyAMove(m5);
+        Mat.applyMove(m1);
+        Mat.applyMove(m2);
+        Mat.applyMove(m3);
+        Mat.applyMove(m4);
+        Mat.applyMove(m5);
         assert Mat.givePosition(m5)==1;
     }
 

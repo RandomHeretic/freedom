@@ -5,6 +5,7 @@ import sdm.freedom.State;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.concurrent.CompletableFuture;
 
 public class MinimaxAgent extends AbstractAgent {
 
@@ -15,9 +16,9 @@ public class MinimaxAgent extends AbstractAgent {
     }
 
     @Override
-    public Move selectNextMove(State s) {
+    public CompletableFuture<Move> selectNextMove(State s) {
 
-        return Arrays.stream(s.getLegalSuccessors())
+        Move selectedMove = Arrays.stream(s.getLegalSuccessors())
                 .max(Comparator.comparingDouble(
                         m -> {
                             State newState = s.clone();
@@ -25,11 +26,12 @@ public class MinimaxAgent extends AbstractAgent {
                             return alphaBetaMinimaxStep(newState, MAX_DEPTH_PLIES, Integer.MIN_VALUE, Integer.MAX_VALUE, super.PLAYER_NUMBER);
                         }
                 )).orElseThrow();
+        return CompletableFuture.completedFuture(selectedMove);
 
     }
 
     private int alphaBetaMinimaxStep(State s, int depth, int alpha, int beta, int currentPlayer) {
-        int[] scores = s.giveBoard().evaluateBoard();
+        int[] scores = s.getBoard().evaluateBoard();
         int maximizerPlayerIdx = super.PLAYER_NUMBER-1;
         int minimizerPlayerIdx = 1-maximizerPlayerIdx;
         boolean maximise = currentPlayer == super.PLAYER_NUMBER;

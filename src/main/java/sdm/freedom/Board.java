@@ -17,7 +17,7 @@ public class Board {
         board = NewBoard;
     }
 
-    public int[][] giveBoard(){
+    public int[][] getBoardMatrix(){
         return board;
     }
     public int getBoardSize(){
@@ -35,17 +35,6 @@ public class Board {
     public void applyMove(Move LastMove,int player){
         int[] m =LastMove.returnMove();
         board[m[0]][m[1]]=player;
-    }
-
-    public void printBoard(){
-        for (int i=0;i<board.length;i++) {
-            StringBuilder row = new StringBuilder();
-            for (int j = 0; j < board.length; j++) {
-                row.append(board[j][i]).append(" ");
-            }
-            System.out.println(row);
-        }
-
     }
 
     public int[] evaluateBoard(){
