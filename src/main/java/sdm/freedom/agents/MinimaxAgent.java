@@ -18,7 +18,8 @@ public class MinimaxAgent extends AbstractAgent {
     @Override
     public CompletableFuture<Move> selectNextMove(State s) {
 
-        Move selectedMove = Arrays.stream(s.getLegalSuccessors())
+        Move[] successors = s.getLegalSuccessors();
+        Move selectedMove = Arrays.stream(successors)
                 .max(Comparator.comparingDouble(
                         m -> {
                             State newState = s.clone();

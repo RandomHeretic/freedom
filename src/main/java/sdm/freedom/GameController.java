@@ -3,6 +3,7 @@ package sdm.freedom;
 import sdm.freedom.agents.AbstractAgent;
 import sdm.freedom.agents.InputListenerAgent;
 
+import javax.swing.*;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -58,14 +59,21 @@ public class GameController implements MoveInputListener {
         match.applyMove(move);
 
         int[] scores = match.evaluateBoard();
-        uiController.refresh(getPlayerTurn(), scores[0], scores[1]);
-        uiController.repaintBoard();
+        boolean terminal = match.getCurrentState().isTerminal();
 
-        if (match.getCurrentState().isTerminal()) {
-            gameOver = true;
-            endGame(scores);
-        } else {
-            startTurn();
+        // Run UI update separatley, as to not break game logic by having it wait for unrelated code
+        SwingUtilities.invokeLater(() -> {
+            uiController.refresh(getPlayerTurn(), scores[0], scores[1]);
+            uiController.repaintBoard();
+
+            if (terminal) {
+                endGame(scores);
+            }
+        });
+
+        // Run next turn by itself as soon as possible. It should avoid async issues with other features (UI)
+        if (!terminal) {
+            CompletableFuture.runAsync(this::startTurn);
         }
     }
 

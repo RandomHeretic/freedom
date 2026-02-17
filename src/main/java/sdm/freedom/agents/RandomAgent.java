@@ -15,7 +15,7 @@ public class RandomAgent extends AbstractAgent {
     @Override
     public CompletableFuture<Move> selectNextMove(State s) {
 
-        Move[] successors =s.getLegalSuccessors();
+        Move[] successors = s.getLegalSuccessors();
         Move selectedMove = successors[new Random().nextInt(successors.length)];
         return CompletableFuture.completedFuture(selectedMove);
 
