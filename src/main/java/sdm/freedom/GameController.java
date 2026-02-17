@@ -55,7 +55,7 @@ public class GameController implements MoveInputListener {
     private void applyMove(Move move) {
         if (!match.checkValidMove(move)) return;
 
-        match.applyAMove(move);
+        match.applyMove(move);
 
         int[] scores = match.evaluateBoard();
         uiController.refresh(getPlayerTurn(), scores[0], scores[1]);

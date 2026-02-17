@@ -89,8 +89,8 @@ public class FreedomBasicTests {
         Move m1 = new Move(1,2);
         Move m2 = new Move(1,3);
         Match Mat = new Match(5);
-        Mat.applyAMove(m1);
-        Mat.applyAMove(m2);
+        Mat.applyMove(m1);
+        Mat.applyMove(m2);
         assert Mat.getCurrentState().giveBoardPosition(m1)==1;
         assert Mat.getCurrentState().giveBoardPosition(m2)==2;
     }

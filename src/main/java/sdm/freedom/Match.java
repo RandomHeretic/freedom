@@ -22,7 +22,13 @@ public class Match {
         return getCurrentPlayer()-1;
     }
 
-    public void applyAMove(Move NewMove){
+    public void checkAndApplyMove(Move NewMove){
+        if(!checkValidMove(NewMove)) return;
+        CurrentState.applyMove(NewMove, CurrentPlayer);
+        CurrentPlayer = 3-CurrentPlayer; //swap between 1 and 2
+    }
+
+    public void applyMove(Move NewMove){
         CurrentState.applyMove(NewMove, CurrentPlayer);
         CurrentPlayer = 3-CurrentPlayer; //swap between 1 and 2
     }
