@@ -1,34 +1,32 @@
 name: CI GitHubActions
 
-# QUANDO parte l'azione?
-# quando fai push 
-# quando apri una Pull Request 
+# When to trigger the workflow: on push or pull request to the main branch
 on:
   push:
-    branches: [ "main" ]
+    branches: ["**"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["**"]
 
 jobs:
   build:
-    # server Linux di GitHub (hope so)
+    # server Linux GitHub Actions
     runs-on: ubuntu-latest
 
     steps:
-    # scarica il codice
-    - uses: actions/checkout@v4
+      # downloading code
+      - uses: actions/checkout@v4
 
-    # installa Java 21
-    - uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
+      # installing Java 21
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
 
-    # utilizza le build presenti
-    - uses: gradle/actions/setup-gradle@v4
+      # using Gradle Wrapper
+      - uses: gradle/actions/setup-gradle@v4
 
-    # rende eseguibile lo script
-    - run: chmod +x gradlew
+      # making gradlew executable
+      - run: chmod +x gradlew
 
-    # lancia i test e la compilazione
-    - run: ./gradlew build
+      # throwing error if build fails
+      - run: ./gradlew build
