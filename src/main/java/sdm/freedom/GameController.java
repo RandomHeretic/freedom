@@ -1,11 +1,11 @@
 package sdm.freedom;
 
-import sdm.freedom.agents.AbstractAgent;
-import sdm.freedom.agents.InputListenerAgent;
-
-import javax.swing.*;
 import java.util.concurrent.CompletableFuture;
 
+import javax.swing.SwingUtilities;
+
+import sdm.freedom.agents.AbstractAgent;
+import sdm.freedom.agents.InputListenerAgent;
 
 public class GameController implements MoveInputListener {
 
@@ -32,12 +32,16 @@ public class GameController implements MoveInputListener {
         this.match = new Match(boardSize);
 
         uiController.setMoveInputListener(this);
-        startTurn();
+
+        refreshUI();
+        CompletableFuture.runAsync(this::startTurn);
     }
 
     public Move[] getLegalMoves() {
-        if (gameOver) return new Move[0];
-        return  match.getCurrentState().getLegalSuccessors();
+        if (gameOver) {
+            return new Move[0];
+        }
+        return match.getCurrentState().getLegalSuccessors();
     }
 
     public Move getLastMove() {
@@ -47,29 +51,26 @@ public class GameController implements MoveInputListener {
     private void startTurn() {
         AbstractAgent agent = agents[match.getCurrentPlayerIdx()];
 
-        CompletableFuture<Move> future =
-                agent.selectNextMove(match.getCurrentState());
+        CompletableFuture<Move> future
+                = agent.selectNextMove(match.getCurrentState());
 
         future.thenAccept(this::applyMove);
     }
 
     private void applyMove(Move move) {
-        if (!match.checkValidMove(move)) return;
+        if (!match.checkValidMove(move)) {
+            return;
+        }
 
         match.applyMove(move);
 
-        int[] scores = match.evaluateBoard();
         boolean terminal = match.getCurrentState().isTerminal();
 
-        // Run UI update separatley, as to not break game logic by having it wait for unrelated code
-        SwingUtilities.invokeLater(() -> {
-            uiController.refresh(getPlayerTurn(), scores[0], scores[1]);
-            uiController.repaintBoard();
+        refreshUI();
 
-            if (terminal) {
-                endGame(scores);
-            }
-        });
+        if (terminal) {
+            SwingUtilities.invokeLater(this::endGame);
+        }
 
         // Run next turn by itself as soon as possible. It should avoid async issues with other features (UI)
         if (!terminal) {
@@ -77,11 +78,20 @@ public class GameController implements MoveInputListener {
         }
     }
 
-    private void endGame(int[] scores) {
-        String result =
-                scores[0] > scores[1] ? "Vince il BIANCO!" :
-                        scores[1] > scores[0] ? "Vince il NERO!" :
-                                "PAREGGIO!";
+    private void refreshUI() {
+        int[] scores = match.evaluateBoard();
+        SwingUtilities.invokeLater(() -> {
+            uiController.refresh(getPlayerTurn(), scores[0], scores[1]);
+            uiController.repaintBoard();
+        });
+    }
+
+    private void endGame() {
+        int[] scores = match.evaluateBoard();
+        String result
+                = scores[0] > scores[1] ? "Vince il BIANCO!"
+                        : scores[1] > scores[0] ? "Vince il NERO!"
+                                : "PAREGGIO!";
 
         uiController.showGameOver(result, scores[0], scores[1]);
     }
@@ -98,7 +108,7 @@ public class GameController implements MoveInputListener {
         return false;
     }
 
-    public boolean isGameOver(){
+    public boolean isGameOver() {
         return gameOver;
     }
 
@@ -112,7 +122,9 @@ public class GameController implements MoveInputListener {
 
     @Override
     public void onMoveSelected(Move move) {
-        if(!match.checkValidMove(move)) return;
+        if (!match.checkValidMove(move)) {
+            return;
+        }
         AbstractAgent agent = agents[match.getCurrentPlayerIdx()];
 
         if (agent instanceof InputListenerAgent inputAgent) {
