@@ -53,9 +53,9 @@ public class FreedomBasicTests {
         int p1=3, p2 =5;
         Board b = new Board(7);
         b.applyMove(m,p1);
-        assert p1==b.givePosition(m);
+        assert p1==b.getPosition(m);
         b.applyMove(m,p2);
-        assert p2==b.givePosition(m);
+        assert p2==b.getPosition(m);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class FreedomBasicTests {
         Board b = new Board(n);
         for(int i=0;i<n;i++){
             for(int j=0;j<n;j++){
-                assert b.givePosition(i,j)==0;
+                assert b.getPosition(i,j)==0;
             }
         }
     }
@@ -91,8 +91,8 @@ public class FreedomBasicTests {
         Match Mat = new Match(5);
         Mat.applyMove(m1);
         Mat.applyMove(m2);
-        assert Mat.getCurrentState().giveBoardPosition(m1)==1;
-        assert Mat.getCurrentState().giveBoardPosition(m2)==2;
+        assert Mat.getCurrentState().getBoardPosition(m1)==1;
+        assert Mat.getCurrentState().getBoardPosition(m2)==2;
     }
 
     @Test
@@ -173,7 +173,7 @@ public class FreedomBasicTests {
         Board board1 = new Board(1);
         Board board2 = board1.clone();
         assert board1 != board2;
-        assert board1.givePosition(0, 0) == board2.givePosition(0, 0);
+        assert board1.getPosition(0, 0) == board2.getPosition(0, 0);
     }
 
     @Test
@@ -182,7 +182,7 @@ public class FreedomBasicTests {
         State  state1 = new State(board1);
         State state2 = state1.clone();
         assert state1 != state2;
-        assert state1.giveBoardPosition(0, 0) == state2.giveBoardPosition(0, 0);
+        assert state1.getBoardPosition(0, 0) == state2.getBoardPosition(0, 0);
     }
 
     @Test

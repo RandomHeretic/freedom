@@ -24,10 +24,10 @@ public class Board {
         return board.length;
     }
 
-    public int givePosition(int x,int y){
+    public int getPosition(int x, int y){
         return board[x][y];
     }
-    public int givePosition(Move m){
+    public int getPosition(Move m){
         int[] xy = m.returnMove();
         return board[xy[0]][xy[1]];
     }

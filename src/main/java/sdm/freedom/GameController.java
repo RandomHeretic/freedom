@@ -14,7 +14,7 @@ public class GameController implements MoveInputListener {
     private Match match;
     private UIController uiController;
     private AbstractAgent[] agents;
-    private boolean gameOver = false;
+
 
     private GameController() {
     }
@@ -39,10 +39,8 @@ public class GameController implements MoveInputListener {
     }
 
     public Move[] getLegalMoves() {
-        if (gameOver) {
-            return new Move[0];
-        }
-        return match.getCurrentState().getLegalSuccessors();
+
+        return  match.getCurrentState().getLegalSuccessors();
     }
 
     public Move getLastMove() {
@@ -63,13 +61,7 @@ public class GameController implements MoveInputListener {
     }
 
     private void applyMove(Move move) {
-        if (gameOver) {
-            return;
-        }
 
-        if (!match.checkValidMove(move)) {
-            return;
-        }
 
         match.applyMove(move);
 
@@ -106,7 +98,7 @@ public class GameController implements MoveInputListener {
     }
 
     public boolean canSkip() {
-        if (match == null || gameOver) {
+        if (match == null) {
             return false;
         }
         for (Move m : getLegalMoves()) {
@@ -117,9 +109,7 @@ public class GameController implements MoveInputListener {
         return false;
     }
 
-    public boolean isGameOver() {
-        return gameOver;
-    }
+
 
     public void reset() {
         gameOver = true;
@@ -138,13 +128,7 @@ public class GameController implements MoveInputListener {
 
     @Override
     public void onMoveSelected(Move move) {
-        if (gameOver || match == null) {
-            return;
-        }
 
-        if (!match.checkValidMove(move)) {
-            return;
-        }
         AbstractAgent agent = agents[match.getCurrentPlayerIdx()];
 
         if (agent instanceof InputListenerAgent inputAgent) {

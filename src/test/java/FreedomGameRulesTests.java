@@ -16,10 +16,10 @@ public class FreedomGameRulesTests {
         Mat.checkAndApplyMove(m2);
         Mat.checkAndApplyMove(m3);
         Mat.checkAndApplyMove(m4);
-        assert Mat.givePosition(m1)==1;
-        assert Mat.givePosition(m2)==0;
-        assert Mat.givePosition(m3)==2;
-        assert Mat.givePosition(m4)==1;
+        assert Mat.getPosition(m1)==1;
+        assert Mat.getPosition(m2)==0;
+        assert Mat.getPosition(m3)==2;
+        assert Mat.getPosition(m4)==1;
     }
 
     @Test
@@ -35,7 +35,7 @@ public class FreedomGameRulesTests {
         Mat.applyMove(m3);
         Mat.applyMove(m4);
         Mat.applyMove(m5);
-        assert Mat.givePosition(m5)==1;
+        assert Mat.getPosition(m5)==1;
     }
 
     @Test

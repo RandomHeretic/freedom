@@ -122,32 +122,30 @@ public class BoardPanel extends JPanel {
         }
 
         // mosse legali
-        if (!GameController.getInstance().isGameOver()) {
-            Move[] legalMoves = GameController.getInstance().getLegalMoves();
+        Move[] legalMoves = GameController.getInstance().getLegalMoves();
 
-            // dimensione pallino
-            int hintDiameter = CELL_SIZE / 4;
-            // l'offset x centrarlo
-            int offset = (CELL_SIZE - hintDiameter) / 2;
+        // dimensione pallino
+        int hintDiameter = CELL_SIZE / 4;
+        // l'offset x centrarlo
+        int offset = (CELL_SIZE - hintDiameter) / 2;
 
-            int currentPlayer = GameController.getInstance().getPlayerTurn();
+        int currentPlayer = GameController.getInstance().getPlayerTurn();
 
-            if (currentPlayer == 1) {
-                // pallino BIANCO
-                g2.setColor(Color.LIGHT_GRAY);
-            } else {
-                // pallino NERO
-                g2.setColor(Color.BLACK);
-            }
-
-            for (Move m : legalMoves) {
-                if (m.x() >= 0 && m.y() >= 0) {
-                    int drawX = MARGIN + (m.y() * CELL_SIZE) + offset;
-                    int drawY = MARGIN + (m.x() * CELL_SIZE) + offset;
-                    g2.fillOval(drawX, drawY, hintDiameter, hintDiameter);
-                }
+        if (currentPlayer == 1) {
+            // pallino BIANCO
+            g2.setColor(Color.LIGHT_GRAY);
+        } else {
+            // pallino NERO
+            g2.setColor(Color.BLACK);
+        }
+        for (Move m : legalMoves) {
+            if (m.x() >= 0 && m.y() >= 0) {
+                int drawX = MARGIN + (m.y() * CELL_SIZE) + offset;
+                int drawY = MARGIN + (m.x() * CELL_SIZE) + offset;
+                g2.fillOval(drawX, drawY, hintDiameter, hintDiameter);
             }
         }
+
 
         // bordo griglia
         g2.setColor(GRID_BORDER_COLOR);

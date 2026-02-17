@@ -26,11 +26,11 @@ public class State {
         return CurrentBoard;
     }
 
-    public int giveBoardPosition(Move m){
-        return CurrentBoard.givePosition(m);
+    public int getBoardPosition(Move m){
+        return CurrentBoard.getPosition(m);
     }
-    public int giveBoardPosition(int x,int y){
-        return CurrentBoard.givePosition(new Move(x,y));
+    public int getBoardPosition(int x, int y){
+        return CurrentBoard.getPosition(new Move(x,y));
     }
 
     public Move getLastMove(){
@@ -56,7 +56,7 @@ public class State {
         //check adjacent spaces
         for(int x = Math.max(0, lastX-1); x <= Math.min(boardSize-1, lastX+1); x++){
             for(int y = Math.max(0, lastY-1); y <= Math.min(boardSize-1, lastY+1); y++){
-                if(CurrentBoard.givePosition(x, y) == 0)
+                if(CurrentBoard.getPosition(x, y) == 0)
                     successorList.add(new Move(x, y));
             }
         }
@@ -64,7 +64,7 @@ public class State {
         //if no adjacent moves are valid, all others are
         if(successorList.isEmpty()) for (int x = 0; x < boardSize; x++)
             for (int y = 0; y < boardSize; y++)
-                if (CurrentBoard.givePosition(x, y) == 0)
+                if (CurrentBoard.getPosition(x, y) == 0)
                     successorList.add(new Move(x, y));
 
         //if it's the last move and placing would lower points allows not making the move

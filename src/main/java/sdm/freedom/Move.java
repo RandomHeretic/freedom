@@ -13,11 +13,4 @@ public record Move(int x, int y, boolean skipMove) {
         return new int[] {x,y};
     }
 
-    public void printAsLastMove(){
-        if(skipMove){
-            System.out.println("Last Move: Skip");
-        }else {
-            System.out.println("Last Move: (" + x + "," + y + ")");
-        }
-    }
 }
